@@ -1,0 +1,48 @@
+
+
+
+! A Mongo Database
+
+
+We will use an free online storage so that you get started fast. In the future you will be able to install your own mongo db database locally.
+We will also use a nice platform independent tools to manage your databases (remote or local) called RoboMongo.
+
+
+!! Base Creation on MongoLab
+
+
++Creating an account on Mongo Lab>file://figures/mongolab1.png|width=50|label=account+
+
++Creating an account on Mongo Lab>file://figures/mongolab2.png|width=50|label=account+
+
++Creating a base>file://figures/mongolab3.png|width=50|label=base+
+
++Picking the free offer>file://figures/mongolab5.png|width=50|label=freebase+
+
++MyComics new collection created>file://figures/mongolab6.png|width=50|label=freebase+
+
++Adding user account>file://figures/mongolab6.png|width=50|label=userAccount+
+
+!! Configuring RoboMongo
+
++Setting up RoboMongo>file://figures/robomongo1.png|width=50|label=robomongo+
+
+
+
+
+
+
+
+
+
+
+
+
+% Local Variables:
+% eval: (flyspell-mode -1)
+% End:
+
+
+% Local Variables:
+% eval: (flyspell-mode -1)
+% End:

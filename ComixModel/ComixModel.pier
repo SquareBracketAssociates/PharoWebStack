@@ -1,0 +1,81 @@
+! A Model for Our Comix
+
+
+blabbalbalbal
+
+
+!! Core Classes 
+
++Comic core model>file://figures/dbmodel.png|width=50|label=coremodel+
+
+
+
+
+
+!! ComicAuthor
+
+[[[
+testScriptWriter
+	"self run: #testScriptWriter"
+	
+	self assert: ComicAuthor sampleGoscinny isScriptWriter.
+	self deny: ComicAuthor sampleGoscinny isCartoonist.
+	self deny: ComicAuthor sampleGoscinny isColorist.
+]]]
+
+
+
+
+
+
+
+
+
+
+
+
+
+!!! ComicBook
+
+[[[
+Object subclass: #ComicBook
+	instanceVariableNames: 'serie title number authors publisher year isbn cover comments date isOriginal'
+	classVariableNames: ''
+	category: 'MyComics'
+]]]
+
+
+!! Collecting Books
+
+
+[[[
+Object subclass: #ComicCollection
+	instanceVariableNames: 'books'
+	classVariableNames: ''
+	category: 'MyComics'
+]]]
+
+[[[
+ComicCollection>>initialize
+	super initialize.
+	
+	self books: OrderedCollection new.
+]]]
+
+[[[
+ComicCollection>>books
+	^ books
+]]]
+
+
+!!! About representing Authors
+
+We could have created a complex hierarchy for author, cartoonist, scriptwriter and colorist. But there is not much different behavior
+so we decided to have one single class.
+
+
+
+
+% Local Variables:
+% eval: (flyspell-mode -1)
+% End:
