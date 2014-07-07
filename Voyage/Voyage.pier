@@ -1,0 +1,219 @@
+! Saving Comics with Voyage
+
+
+Voyage is an abstraction layer for document database such MongoDB. 
+
+
+!!! Loading Voyage
+
+
+Load VoyageMOngo from the confirguation browser or via the script
+
+[[[
+Gofer new
+	smalltalkhubUser: 'estebanlm' project:'Voyage'
+	configuration;
+	load.
+]]]
+
+
+!!!!Define a new package MyComicsVoyage.
+
+
+!!! ComicBook
+
+[[[
+ComicBook>>isVoyageRoot
+	^true
+]]]
+
+
+[[[
+ComicCollection>>isVoyageRoot
+	^true
+]]]
+
+
+[[[
+ComicAuthor>>isVoyageRoot
+	^true
+]]]
+
+
+[[[
+ComicSerie>>isVoyageRoot
+	^true
+]]]
+
+
+Four collections in the mongo dabase.
+
+
+!!! Defining a Configuration
+
+[[[
+baseline01: spec
+	<version: '0.1-baseline'>
+
+	spec for: #'common' do: [
+		spec blessing: #'baseline'.
+		spec project: 'VoyageMongo' with: [
+				spec
+					className: #ConfigurationOfVoyageMongo;
+					versionString: #'stable';
+					repository: 'http://smalltalkhub.com/mc/Pharo/MetaRepoForPharo30/main/' ].
+		spec 
+			package: #MyComics;
+			package: #MyComicsVoyage with: [
+				spec requires: #(#MyComics 'VoyageMongo' ). ]. ].
+]]]
+
+
+[[[
+version01: spec
+	<version: '1.0'>
+
+	spec for: #'common' do: [
+		spec blessing: #'release'.
+		spec description: 'First version with a voyage package'.
+		spec 
+			package: #MyComics with: 'MyComics-StephaneDucasse.8';
+			package: #MyComicsVoyage with: 'MyComicsVoyage.1' ].
+]]]
+
+
+[[[
+
+]]]
+
+
+!!!
+
+[[[
+
+Object subclass: #MyComicsMongoConnector
+	instanceVariableNames: ''
+	classVariableNames: 'BaseName Password Port ServerName UserName'
+	category: 'MyComicsVoyage'
+
+]]]
+
+
+Using the refactoring create accessor for the class variables
+
+[[[
+MyComicsMongoConnector class>>baseName
+	^ BaseName
+
+MyComicsMongoConnector class>>baseName: anObject
+	BaseName := anObject
+]]]
+
+[[[
+MyComicsMongoConnector class>>declareDefaultConnectionParameters
+	"self declareDefaultConnectionParameters"
+	
+	self 
+		serverName: 'ds033069.mongolab.com';
+		port: 33069;
+		baseName: 'mycomics';
+		username: 'stephane';
+		password: 'mycomics'
+		
+]]]
+
+Do not forget to execute MyComicsMongoConnector declareDefaultConnectionParameters.
+
+Note that we could have use instance variable
+
+[[[
+MyComicsMongoConnector class>>initializeConnection
+
+	mongoConnection := VOMongoRepository host: ServerName port: Port database: BaseName username: Username password: Password	.
+	
+]]]
+
+
+[[[
+MyComicsMongoConnector new 
+]]]
+
++inspector>file://figures/connectionInspector.pdf|width=50|label=connectionInspector+
+
+
+open an inspector
+
+
+
+
+
+
+[[[
+|  newCollection mongo |
+mongo := MyComicsMongoConnector new.
+newCollection := ComicCollection new. 
+newCollection addBook: ComicBook sampleThorgal1.
+mongo connection save: newCollection.
+]]]
+
+
+Now we can query our new database using for example the selectAll: Voyage message. 
+[[[
+
+mongo QueryInInspectorconnection selectAll: ComicBook
+
+]]]
+
+
++Querying our database from the inspector>file://figures/QueryInInspector.pdf|width=50|label=QueryInInspector+
+
+
+Since the book is just to test the collection we will later remove. 
+
+
+
+
+!!! Cleaning after our experiment
+
+Now that we published incomplete books it is the occasion to look at how we can clean the database by removing element.
+Removing the collection does not work because we have to remove elements one by one. 
+
+Once the collection is empty we can remove. 
+
+[[[
+(mongo connection selectAll: ComicBook) do: [ :each | mongo connection remove: each ].
+mongo connection remove: newCollection.
+
+(mongo connection selectAll: ComicBook) isEmpty.
+	   returns true
+
+(mongo connection selectAll: ComicCollection) isEmpty.
+	   returns true
+]]]
+
+
+!! Committing a serie of welformed books
+
+To test that the system fully works including author
+
+
+
+!!! Questions to esteban 
+
+To improve the chapter on Voyage:
+- is the singleton mode adapted for an application having multiple users.
+
+- do we save the complete collection each time and mongo just save what is needed
+
+- do we save an object element one by one during each addition?
+
+- how to close connection 
+
+- how can we remove something from the database when I do not have a reference to it anymore.
+
+- when I remove a book will be collection be updated.
+
+
+% Local Variables:
+% eval: (flyspell-mode -1)
+% End:
