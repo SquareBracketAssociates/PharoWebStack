@@ -1,0 +1,154 @@
+! myComics: a nice Book Management Application
+
+Pharo has an excellent web stack: first it is a simple and powerful language to build complex applications Second Pharo has unique web solutions such as Seaside *http://www.seaside.st* or Amber *http://www.amber-lang.net*. Third Pharo has some nice layer to save data in many different forms: first in noSQL databases like mongoDB, but also with different formats such as JSON, XML, CVS... 
+
+In this book we will take you step by step and we will build together a nice application from top to bottom to manage books. 
+
++myComics App>file://figures/catalog.png|width=80|label=account+
+
+
+Vous allez réaliser ensemble une application complète destinée à la gestion d’une collection de bandes dessinées. Ce type de logiciel permet d’explorer de nombreux aspects du développement avec Pharo tels que la gestion d’une base de données, la création du modèle adéquat ou encore l’exploitation de plusieurs des puissants frameworks mis à votre disposition. Avant de présenter les choix techniques, il est nécessaire de décrire en détail les fonctionnalités attendues et surtout de choisir un nom pour votre projet. A la suite d’une longue réflexion, nous vous proposons myComics qui a défaut d’être très original, présente l’intérêt d’être explicite et court. 
+
+
++myComics App>file://figures/catalog.png|width=80|label=account+
+
+
+
+!! Architecture de l’application
+
+L’application myComics sera une application web fonctionnant dans un navigateur. Les utilisateurs doivent pouvoir se connecter en différents endroits et avec différents types de machines. Il est maintenant courant de posséder un ordinateur, une tablette ou un téléphone évolué. Ces différents systèmes disposent d’un navigateur reposant sur des technologies communes telles que HTML (Hypertext Markup Language), CSS (Cascading Style Sheets) ou encore le langage Javascript. L’ergonomie de ces systèmes étant différentes, ilsseront plus ou moins adaptés à certains usages votre application. Bien évidemment, il sera plus pratique de saisir la description d’une bande dessinée sur un ordinateur mais également plus confortable de consulter votre collection sur votre tablette au fond d’un bon canapé. Les utilisateurs nomades apprécieront probablement la possibilité d’utiliser leur téléphone pour vérifier qu’ils possèdent ou pas une bande dessinée ou pour consulter la ficher descriptive. Cette adaptabilité est permise par les technologies web et en particulier par l’usage de bonnes pratiques définies sous le terme de Responsive Web Design dont l’objectif est de réaliser des sites web adaptatifs. Plutôt que de construire différentes variantes d’un même logiciel, cette approche vise à donner la priorité aux technologies mobiles afin d’obtenir un comportement et une ergonomie commune à l’ensemble des plates-formes d’exécution. Cette approche est économique en temps, en coût de développement et favorise la maintenabilité d’un projet basé sur un unique ensemble de composants.
+
+!!!Décrire la collection
+
+Quelles seront les données manipulées par myComics ? Vous devez définir un modèle composés des différentes informations, les organisant et établissant des dépendances entre elles. Il faut également à ce stade définir un vocabulaire définissant au mieux les différentes entités du modèle.
+
+Une collection de bandes dessinées est composée d’un ensemble de séries. Chaque série porte un nom et contient un certain nombre de livres. Sur chacune d’entre elle, le collectionneur a besoin de savoir si la série fait encore l’objet de nouvelle publication et s’il possède l’intégralité des titres qui la compose.
+   
+Chaque livre d’une série est décrit par un ensemble d’informations qui sont:
+-Le titre,
+-Le numéro dans la série,
+-Les auteurs,
+-L’éditeur,
+-L’année d’édition,
+-La référence catalogue (ISBN),
+-La couverture,
+-Les notes du collectionneur
+-La date d’acquisition,
+-L’indication que la bande dessinée est l’originale ou une réédition.
+
+Certaines de ces données sont plus complexes qu’il n’y paraît. Ainsi, un auteur porte un nom, un prénom et il peut être scénariste, dessinateur ou les deux à la fois. Les auteurs et les éditeurs doivent être référencés avec une orthographe identique quelque soit le livre où ils apparaissent. Cette cohérence permettra la recherche ou le tri des albums par auteur ou par éditeur.
+
+
+%+Creating an account on Mongo Lab>file://figures/ diagramme illustrant l'organisation des données+
+
+Il est donc évident qu’une ou plusieurs relations doit être établie entre chaque livre et la liste des auteurs ainsi que vers celle des éditeurs. Ces deux types de données nécessiteront un stockage et un traitement particulier, différent de celui des livres.
+
+!! Functional Analysis of the Application
+
+Toutes les informations doivent être manipulées par l’utilisateur de l’application. Les opérations de base peuvent être résumées sous le terme CRUD (Create, Read, Update, Delete)  qui signifie que l’utilisateur doit avoir la possibilité de :
+-Ajouter un nouveau livre dans la collection,
+-Consulter la description d’un livre,
+-Mettre à jour la description d’un livre,
+-Effacer la description d’un livre.
+
+De même, l’utilisateur doit gérer les différentes séries qui composent sa collection. Il peut donc :
+-Ajouter une nouvelle série dans la collection,
+-Consulter la liste des livres contenus dans une série,
+-Renommer une série,
+-Effacer une série.
+
+Ces opérations sont extrêmement courantes dans les applications de gestion et en constituent la partie émergée puisqu’elles font partie des outils les plus utilisés. 
+
+!!! Other functionalities
+
+D’autres fonctionnalités plus évoluées seront également incluses dans myComics. Il est ainsi intéressant de disposer d’un mécanisme de duplication des livres afin de réduire le travail nécessaire à la saisie d’une nouvelle bande dessinée dans la collection. Pour le collectionneur, il suffira de renseigner uniquement les champs ayant un contenu différent tels que le titre, la référence ISBN ou l’année d’édition.
+Un collectionneur de bandes dessinées a besoin de chercher des informations dans sa volumineuse bibliothèque. Quels sont les livres ayant le mot “lune” dans le titre ? Un moteur de recherche simple permettra de trouver cette information rapidement. 
+
+L’exportation des fiches descriptives des livres est un autre outil important. Dans myComics, l’utilisateur doit pouvoir sauvegarder ces données dans un format bureautique. Le format CSV (Comma-separated values) est tout à fait adapté car compatible avec la plupart des tableurs.  Il permet d’enregistrer les informations sous la forme d’un texte structuré, adapté à la représentation tabulaire. Une fois importé dans un outil bureautique, un document CSV peut facilement être exploité et modifié. Le support du format XML assure quant à lui l’interopérabilité et la conservation des données dans le temps. Un autre format intéressant est le PDF (Portable Document Format) qui autorise la génération d’un document bureautique dont la présentation peut être extrêmement évoluée. Ce type de document est intéressant pour générer des rapports ou échanger la description d’une collection avec un autre collectionneur.
+
+Vous voici au terme de ce petit cahier des charges et vous savez maintenant quelles fonctionnalités doivent être implémentées. Avant de débuter  la programmation proprement dite, il est important de réfléchir à la présentation et à l’ergonomie de l’application. Cette étape de simulation permet de juger de la viabilité du logiciel, tant dans ses aspects fonctionnels (prise en main par l’utilisateur) que dans ses aspects techniques (positionnement des composants, enchaînement des traitements, contraintes).
+
+!! Aspect et ergonomie de l’application
+
+Une maquette, qu’elle soit faite sur papier, avec un outil spécialisé ou un simple éditeur HTML, est une étape essentielle pour concevoir un bon logiciel. Elle permet d’estimer l’attractivité du produit et de réfléchir aux problématiques de conception.
+
+Le logiciel myComics est un produit de gestion de données et il est important de les rendre facilement accessibles et modifiables par les utilisateurs. Votre travail va être centré sur les bandes-dessinées et les collections regroupant ces livres. L’utilisateur doit voir et accéder à un maximum d’éléments avec un minimum d’interaction. Il semble donc judicieux que l’écran principal soit composé de :
+- La liste des séries,
+- La liste des bandes dessinées présentes dans la série sélectionnée. 
+
+La liste des séries est un élément très important pour naviguer dans une collection. Choisir l’une des séries permet d’en consulter le contenu. Il est intéressant d’afficher le nombre de livres contenus dans la série afin que le collectionneur n’est pas besoin de les comptabiliser manuellement.
+
+<image: liste des séries (sans Unclassified qui sera décrit un peu plus tard>
++myComics App>file://figures/catalog.png|width=80|label=account+
+
+La couverture d’une bande dessinée est un élément visuel important pour le collectionneur qui reconnaîtra rapidement un livre de sa collection. Il semble donc judicieux d’afficher cette information sur l’écran. 
+
+<image: Insérer image d'une couverture/titre>
+
+Le collectionneur ne disposant pas forcément d’une image de la couverture du livre, il est nécessaire de disposer d’une couverture neutre utilisée par défaut.
+
+<image: insérer image de la couverture neutre>
+
+Ces couvertures seront regroupées sous la forme d’un tableau décrivant le contenu d’une série.
+
+<image: Insérer image du tableau des couvertures>
+
+Une autre vue, basés sur une liste, est également judicieuse. Plus synthétique et regroupant les informations principales, elle est mieux adaptée à la consultation des séries les plus volumineuses.
+
+<image: liste des BD d’une série (format tableau)>
++Creating an account on Mongo Lab>file://figures/listview.png|width=80|label=account+
+
+A ce stade, il est nécessaire d’ajouter un menu à l’application afin de regrouper les fonctionnalités. Commun à l’ensemble des écrans, il est situé dans la partie supérieure de la page. Par convention, un clic sur le titre de l’application permet de revenir à l’écran principal, c’est à dire la vue graphique de la série sélectionnée. 
+
+<image: le menu supérieur de l’application>
+
+Sur la gauche, un menu déroulant permet de gérer les séries. Il est possible de créer une nouvelle série, de renommer une série existante et de supprimer une série.
+
+<image: le menu déroulant de gestion des séries>
+
+Que deviennent les livres classés dans une série effacée par l’utilisateur ? Etant donné que l’effacement d’une série peut être dû à une erreur de l’utilisateur, il est prudent de ne pas effacer également les bandes dessinées qui s’y trouvaient. Pour cette raison, l’application utilise une série spéciale nommée “Unclassified” contenant l’ensemble des livres qui n’ont pas été rangés dans une série.
+
+<image: la liste des séries avec l’enrée Unclassified”>
+
+Dans le menu principal, un bouton permet d’ajouter rapidement une nouvelle bande dessinée dans la série sélectionnée. Un menu déroulant donne accès aux outils d’exportation vers les formats CSV, XML et PDF. 
+Sur la partie droite se trouvent deux boutons permettant de choisir la type de vue (graphique ou liste). Enfin, un champ de recherche est présent pour filtrer le contenu de la collection. 
+
+Le résultat d’une recherche sera présenté sous la forme d’une liste. Afin d’être cohérent d’un point de vue ergonomique, l’application classera les livres trouvés dans une série spéciale nommée “Search result”.
+
+<image: la catégorie Search result>
+
+Pour ajouter un nouveau livre, l’utilisateur doit cliquer sur l’option “Add comic” présente dans le menu principal. Pour éditer la description d’une bande dessinée, l’utilisateur doit cliqué sur sa couverture ou sur son titre. Dans les deux cas, ces actions donneront accès à un formulaire commun qui s’adaptera à l’opération. En cas de création, le formulaire ne contiendra aucune donnée et permettra l’ajout du livre à la collection. Si l’utilisateur édite une bande dessinée, le formulaire sera pré-rempli et des actions supplémentaires seront accessibles telles que:
+Dupliquer l’enregistrement afin de faciliter la saisie de bande-dessinée d’une même série et ne changer qu’un minimum d’informations,
+Effacer le livre.
+
+Le formulaire peut être décomposé en trois parties. Tout d’abord, l’utilisateur choisi la série dans laquelle il va classer la bande dessinée.
+
+<image: choix de la série dans le formulaire>
++Creating an account on Mongo Lab>file://figures/search.png|width=50|label=account+
+
+
+Dans le seconde partie, l’utilisateur indique les informations essentielles sur le livre telles que le titre ou l’année d’édition.
+
+<image: informations essentielles dans le formulaire>
++Creating an account on Mongo Lab>file://figures/Edit.png|width=50|label=account+
+
+Trois champs sont particuliers dans ce formulaire. Ils permettent de saisir le dessinateur, le scénariste et l’éditeur d’une bande dessinée. Pour éviter de saisir différemment une même personne ou un même éditeur, un bouton donne accès à une nomenclature composée des entrées précédentes.
+
+<image: boite modale choix du dessinateur>
+
+La troisième partie du formulaire correspond aux informations plus spécifiques. Le collectionneur peut importer une image de la couverture de la bande dessinée, préciser la date d’acquisition et saisir des commentaires.
+
+<image: partie spécifique à la collection>
+
+Le formulaire se termine par les boutons d’action autorisant l’ajout d’une bande dessinée ou la modification d’un livre de la collection.
+
+<image: les boutons du formulaire d’édition>
+
+Le bouton “Duplicate” déclenche la copie de la bande dessinée. Un clone est ainsi inséré dans la base de données et ne diffère de l’original que par le contenu différents de quelques champs. Cet outil permet de limiter le travail de saisie pour des livres d’une même série.
+
+
+
+
+
+
+!! Now we are ready 
