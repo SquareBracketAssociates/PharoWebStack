@@ -13,25 +13,24 @@ fi
 
 function pillar_all() {
   $PILLAR_COMMAND export --to='LaTeX whole book'
-  $PILLAR_COMMAND export --to='LaTeX by chapter'
+  # $PILLAR_COMMAND export --to='LaTeX by chapter'
   $PILLAR_COMMAND export --to='HTML by chapter'
-  $PILLAR_COMMAND export --to='Markdown by chapter'
+  # $PILLAR_COMMAND export --to='Markdown by chapter'
 }
 
 function pillar_one() {
   input="$1"
-  # $PILLAR_COMMAND export --to='LaTeX whole book' "$input"
   $PILLAR_COMMAND export --to='LaTeX by chapter' "$input"
   $PILLAR_COMMAND export --to='HTML by chapter' "$input"
-  $PILLAR_COMMAND export --to='Markdown by chapter' "$input"
+  # $PILLAR_COMMAND export --to='Markdown by chapter' "$input"
 }
 
 function mypdflatex() {
   pillar_file="$1"
 
   echo "Compiling PDF from $pillar_file..."
-  lualatex --file-line-error --interaction=batchmode "\input" "$pillar_file" 2>&1 1>/dev/null
-  ret=$?
+  pdflatex -halt-on-error -file-line-error -interaction batchmode "$pillar_file" 2>&1 1>/dev/null
+    ret=$?
   if [[ $ret -ne 0 ]]; then
     cat $pillar_file.log
     echo "Can't generate the PDF!"
@@ -79,7 +78,7 @@ function compile_latex_book() {
 }
 
 function latex_enabled() {
-  hash lualatex 2>/dev/null
+  hash pdflatex 2>/dev/null
 }
 
 if [[ $# -eq 1 ]]; then
