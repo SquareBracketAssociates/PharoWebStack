@@ -1,35 +1,27 @@
-! Pharo Web Stack
+!Pharo Web Stack
 
 
-!! The Stack
+!!The Stack
 
-Pharo is a simple language that is really powerful to model complex domains and applications. In addition, different frameworks are available at different levels. 
+Pharo is a simple language that is really powerful to model complex domains and applications. In addition, different frameworks are available at different levels to empower the development. 
 
-- Metamodeling. At the modeling level,  Magritte provides a way to describe objects and offers a set of interpreter that take advantage of the description. For example, Seaside-Magritte offers automatic form creation and other behavior of Seaside components. Voyage a framework that supports noSql databases such MongoDB uses Magritte.
+- Model level. Magritte (a metamodeling framework) provides a way to describe objects and offers a set of interpreters that take advantage of these descriptions. For example, Seaside-Magritte offers automatic form creation and other behavior of Seaside components. Voyage, a framework that supports noSql databases such as MongoDB, also uses Magritte.
 
-- Web level. Pharo is particularly well positioned at the web level. Several frameworks exists and have been used on production since several years. First, Seaside *http://www.seaside.st* is a server side solution. It uses Zinc to serve XHTML and Javascript. Seaside offers JQuery supports (Read the chapter *http://book.seaside.st*)
-The library Twitter bootstrap *http://*is supported by Seaside and this is the one we will use in this book.
-Reef is also an extension of Seaside: it provides component embedding Javascript and let you decide client or server side queries and actions.
+- Web level. Pharo is particularly well positioned at the web level. Several frameworks exists and have been used in production since several years. First, Seaside *http://www.seaside.st* is a server-side solution. It uses Zinc to serve HTML and Javascript. Seaside offers JQuery supports (Read the chapter *http://book.seaside.st*). The library Twitter bootstrap *http://getbootstrap.com/* is supported by Seaside and this is the one we will use in this book. Reef is also an extension of Seaside: it provides components embedding Javascript and let you decide client or server side queries and actions. Recently a new framework appeared: Tide. Tide is the equivalent to Seaside but defined in Amber *http://amber-lang.net/*, therefore in the client side. Tide sends JSON serialized objects with meta-descriptions of actions.
 
-Recently a new framework appeared: Tide. Tide is the equivalent to Seaside but defined in Amber, therefore in the client side. Tide sends JSON serialized objects with meta descriptions of actions.
+- Network level. At the lowest level, Zinc is the HTTP client server used by default in Pharo (there is chapter about Zinc in the Pharo for the entreprise book  *http://*). Zinc is continuously improved by its author: Sven Van Caekenberghe. Zodiac is the HTTPS counterpart of Zinc. In addition, there is support for Oauth and WebSockets. Zinc also provides facilities to develop REST applications. 
 
+- Persistency level. There are several databases supporting from OORM to noSQL ones. In this book we will focus on the noSQL one such as MongoDB. Other frameworks such GLORP or DBXTalk support relational databases.
 
-
-
-- Zinc. At the lowest level, Zinc in a HTTP client server uses by default in Pharo (there is chapter about Zinc on the Pharo for the entreprise book  *http://*). Zinc is continuously improved by Sven Van Caekenberghe its author. Zodiac is the HTTPS counterpart of Zinc. In addition, there are support for Oauth, WebSockets. Zinc also supports REST. 
-
-- Databases. There are several databases supporting from OORM to noSQL ones. In this book we will focus on the noSQL one such as MongoDB. Other frameworks such GLORP or DBXTalk support relational databases.
-
-- Various  formats. There are several frameworks to read and emit various formats such JSON NeoJSON *http*,
-tab separated NeoCVS, or XML (XMLWriter/XMLReader).
+- Data types level. There are several frameworks to read and emit various formats such as JSON using NeoJSON *http://stfx.eu/neojson/*, comma-separated values (CSV) using NeoCVS *http://github.com/svenvc/NeoCVS*, XML (XMLWriter/XMLReader) or the Smalltalk Object Notation (STON) *https://github.com/svenvc/ston*.
 
 
 !! Pharo in a nutshell
-Pharo is a cool dynamic pure object-oriented language. Its syntax fits in one post card and its object model is simple. If you want to know more have a look at some chapters of the Pharo by Example book freely available at: http://www.pharobyexample.org
+Pharo is a cool dynamic pure object-oriented language. Its syntax fits in one post-card and its object model is simple. If you want to know more have a look at some chapters of the Pharo by Example book freely available at: *http://www.pharobyexample.org*
 
-!!! Syntax
+!!!Syntax
 
-Pharo's syntax is minimal. Essentially there is syntax only for ''sending messages'' (i.e., expressions). Expressions are built up from a very small number of  primitive elements. There are only 6 keywords, and there is no syntax for control structures or declaring new classes. Instead, nearly everything is achieved by sending messages to objects. For instance, instead of an if-then-else control structure, Pharo sends messages like ==ifTrue:== to ==Boolean== objects. New subclasses are created by sending a message to their superclass.
+Pharo's syntax is minimal. Essentially, there is syntactic constructs only for ''sending messages'' (i.e., expressions). Expressions are built up from a very small number of  primitive elements. There are only 6 keywords, and there is no syntax for control structures or declaring new classes. Instead, nearly everything is achieved by sending messages to objects. For instance, instead of an if-then-else control structure, Pharo sends messages like ==ifTrue:== to ==Boolean== objects. New subclasses are created by sending a message to their superclass.
 
 The following table shows how some Java common patterns are expressed in Pharo.
 
