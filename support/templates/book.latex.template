@@ -7,18 +7,18 @@
         vmargin={.75in,1in},
         ignoreheadfoot
 ]{geometry}
-\input{support/latex/common.tex}
+\input{../support/latex/common.tex}
 \setboolean{lulu}{true}
 %=================================================================
 % Add the path for the figures of each chapter here:
 \graphicspath{
-        {figures/}
-		{ComixModel/}
-        {MyComicApp/}
-		{Exporters/}
-		{Mongo/}
-		{Voyage/}
-		{PharoInaNutshell/}
+	{../figures/}
+	{../ComixModel/}
+	{../MyComicApp/}
+	{../Exporters/}
+	{../Mongo/}
+	{../Voyage/}
+	{../PharoInaNutshell/}
 }
 %=================================================================
 \let\wholebook=\relax

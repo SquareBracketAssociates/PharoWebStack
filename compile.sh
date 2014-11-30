@@ -13,7 +13,7 @@ fi
 
 function pillar_all() {
   $PILLAR_COMMAND export --to='LaTeX whole book'
-  # $PILLAR_COMMAND export --to='LaTeX by chapter'
+  $PILLAR_COMMAND export --to='LaTeX by chapter'
   $PILLAR_COMMAND export --to='HTML by chapter'
   # $PILLAR_COMMAND export --to='Markdown by chapter'
 }
@@ -27,10 +27,9 @@ function pillar_one() {
 
 function mypdflatex() {
   pillar_file="$1"
-
   echo "Compiling PDF from $pillar_file..."
   pdflatex -halt-on-error -file-line-error -interaction batchmode "$pillar_file" 2>&1 1>/dev/null
-    ret=$?
+  ret=$?
   if [[ $ret -ne 0 ]]; then
     cat $pillar_file.log
     echo "Can't generate the PDF!"
@@ -39,11 +38,6 @@ function mypdflatex() {
 }
 
 function produce_pdf() {
-  if hash foobar 2>/dev/null; then
-    echo hello
-    return
-  fi
-
   dir="$1"
   pillar_file="$2"
 
@@ -74,7 +68,7 @@ function compile_latex_book() {
   echo COMPILING Book
   echo =========================================================
   cd book-result
-  produce_pdf . EnterprisePharo
+  produce_pdf . PharoWebStack
 }
 
 function latex_enabled() {
