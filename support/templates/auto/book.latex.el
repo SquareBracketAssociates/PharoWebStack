@@ -16,5 +16,5 @@
      "a4paper"
      "10pt"
      "twoside"
-     "_support/latex/common")))
+     "support/latex/common")))
 
